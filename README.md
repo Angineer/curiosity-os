@@ -1,27 +1,21 @@
 # curiosity-os
-On-board software for Curiosity
+On-board software for Curiosity, a playful spaceship simulator
 
-High-level design for Curiosity can be found at https://www.adtme.com/projects/Curiosity
+A high-level design for Curiosity can be found at https://www.adtme.com/projects/Curiosity
 
-## Design (work in progress):
-Functionality
-- Command line with a few options
-  + Some options are hidden and can only be found by exploring
+CuriosityOS consists of two main components:
+- A user interface for managing the spaceship
+- A simulator that keeps track of the spaceship and the universe around it
 
-- Filesystem with various stuff to explore
-  + Ship logs
-  + Ship component statuses
+## User Interface
+The user interface includes the following:
+- A shell where the user can run commands
+- Some simple readouts about spaceship status
+- Basic utilities for planning your adventures and communicating with mission control
 
-- Manages the whole spaceship
-  + Talks to other computers managing different parts of the system
+The user interface is intentionally a little opaque. This means that you have to explore a little in order to find all its features.
 
-- Communication with mission control
-  + Chat
-  + Upload/download data and missions
-  + Maybe comms with other systems?
+## Simulator
+The simulator maintains a model that represents the state of the spaceship and the universe. The model is updated in a simulation loop based on a set of inputs. Those inputs include hardware (switches, buttons), the current state, and settings from the UI. At the end of each loop, the newly simulated state is used to update a set of hardware outputs such as lights or speakers.
 
-Structural stuff
-- OS/platform
-- Configuration
-- Updates/version management
-- Tests
+Information about the model can be queried (for example via the UI). The model is periodically saved to disk to ensure that if the system crashes, it can come back up without losing too much information.

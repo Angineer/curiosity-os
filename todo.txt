@@ -1,0 +1,16 @@
+## Filesystem
+  + Ship logs
+  + Ship status pseudo-filesystem
+
+## Hardware communication
+
+## Communication with mission control
+  + Chat
+  + Upload/download data and missions
+  + Maybe comms with other systems?
+
+## Misc
+- OS/platform
+- Configuration
+- Updates/version management
+- Tests
