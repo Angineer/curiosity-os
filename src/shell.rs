@@ -4,8 +4,22 @@ use std::io::Write;
 fn print_help_text() {
     println!("Available commands:");
     println!("help  Print this help message");
-    println!("msg   Check messages or send a message");
+    println!("msg   Send a message");
     println!("exit  Exit the command interpreter");
+}
+
+fn send_message() {
+    println!("Enter message:");
+    print!(">> ");
+    io::stdout().flush().unwrap();
+
+    let mut input = String::new();
+
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
+
+    println!("Message sent");
 }
 
 pub fn run_shell() {
@@ -23,6 +37,7 @@ pub fn run_shell() {
 
         match input.trim() {
             "help" => print_help_text(),
+            "msg" => send_message(),
             "exit" => {
                 println!("Goodbye");
                 break;
