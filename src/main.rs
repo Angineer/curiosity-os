@@ -1,3 +1,7 @@
+mod shell;
+
+use crate::shell::run_shell;
+
 fn main() {
-    println!("Hello, world!");
+    run_shell();
 }
