@@ -3,24 +3,38 @@ use std::io::Write;
 
 mod shell;
 
-use crate::shell::Shell;
+use crate::shell::{Shell, ShellCommand};
 
-fn send_message() {
-    println!("Enter message:");
-    print!(">> ");
-    io::stdout().flush().unwrap();
+/// Shell command for sending a message to mission control
+struct SendMessageCommand {}
 
-    let mut input = String::new();
+impl ShellCommand for SendMessageCommand {
+    fn execute(&self) -> bool {
+        println!("Enter message:");
+        print!(">> ");
+        io::stdout().flush().unwrap();
 
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read line");
+        let mut input = String::new();
 
-    println!("Message sent");
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+
+        // TODO: actually send message somewhere
+        println!("Message sent");
+        false
+    }
+    fn describe(&self) -> String {
+        String::from("Send a message to mission control")
+    }
 }
 
+/// Run Curiosity OS
 fn main() {
-    let shell = Shell::new(String::from("Welcome to Curiosity"),
-                           String::from("Goodbye"));
+    let mut shell = Shell::new(
+        String::from("Welcome to Curiosity"),
+        String::from("Goodbye"),
+    );
+    shell.add_command("msg", Box::new(SendMessageCommand {}));
     shell.run();
 }
