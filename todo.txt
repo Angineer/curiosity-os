@@ -14,3 +14,7 @@
 - Configuration
 - Updates/version management
 - Tests
+
+## Potential TUI frameworks
+- cursive: https://github.com/gyscos/Cursive
+- ratatui: https://github.com/ratatui/ratatui

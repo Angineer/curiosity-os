@@ -1,48 +1,78 @@
+use std::collections::HashMap;
 use std::io;
 use std::io::Write;
 
-fn print_help_text() {
-    println!("Available commands:");
-    println!("help  Print this help message");
-    println!("msg   Send a message");
-    println!("exit  Exit the command interpreter");
+pub trait ShellCommand {
+    fn execute(&self) -> bool;
+    fn describe(&self) -> String;
 }
 
-fn send_message() {
-    println!("Enter message:");
-    print!(">> ");
-    io::stdout().flush().unwrap();
-
-    let mut input = String::new();
-
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read line");
-
-    println!("Message sent");
+pub struct HelpCommand {
+}
+impl ShellCommand for HelpCommand {
+    fn execute(&self) -> bool{
+        println!("Help!");
+        false
+    }
+    fn describe(&self) -> String{
+        String::from("Available commands:")
+    }
 }
 
-pub fn run_shell() {
-    println!("Welcome to Curiosity");
+pub struct ExitCommand {
+    exit_string: String,
+}
+impl ShellCommand for ExitCommand {
+    fn execute(&self) -> bool {
+        println!("{}", self.exit_string);
+        true
+    }
+    fn describe(&self) -> String {
+        String::from("Exit the command interpreter")
+    }
+}
 
-    loop {
-        print!("> ");
-        io::stdout().flush().unwrap();
+pub struct Shell {
+    opening: String,
+    commands: HashMap<String, Box<dyn ShellCommand>>,
+}
 
-        let mut input = String::new();
+impl Shell {
+    pub fn new(opening: String, closing: String) -> Self {
+        let mut shell = Shell {
+            opening,
+            commands: HashMap::new(),
+        };
+        let help_command = HelpCommand{};
+        shell.add_command("help", Box::new(help_command));
+        let exit_command = ExitCommand{exit_string: closing};
+        shell.add_command("exit", Box::new(exit_command));
 
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read line");
+        shell
+    }
 
-        match input.trim() {
-            "help" => print_help_text(),
-            "msg" => send_message(),
-            "exit" => {
-                println!("Goodbye");
-                break;
-            },
-            &_ => println!("Error: unknown command"),
+    pub fn add_command(&mut self, name: &str, command: Box<dyn ShellCommand>) {
+        self.commands.insert(String::from(name), command);
+    }
+
+    pub fn run(&self) {
+        println!("{}", self.opening);
+
+        loop {
+            print!("> ");
+            io::stdout().flush().unwrap();
+
+            let mut input = String::new();
+
+            io::stdin()
+                .read_line(&mut input)
+                .expect("Failed to read line");
+
+            let command = self.commands.get(input.trim());
+            match command {
+                Some(command) => if command.execute() { break },
+                None => println!("Error: unknown command"),
+            }
         }
     }
 }
