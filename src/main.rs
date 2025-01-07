@@ -5,7 +5,7 @@ mod shell;
 
 use crate::shell::{Shell, ShellCommand};
 
-/// Shell command for sending a message to mission control
+/// Shell command for sending a message to mission control.
 struct SendMessageCommand {}
 
 impl ShellCommand for SendMessageCommand {
@@ -29,12 +29,9 @@ impl ShellCommand for SendMessageCommand {
     }
 }
 
-/// Run Curiosity OS
+/// Run Curiosity OS.
 fn main() {
-    let mut shell = Shell::new(
-        String::from("Welcome to Curiosity"),
-        String::from("Goodbye"),
-    );
+    let mut shell = Shell::new("Welcome to Curiosity", "Goodbye");
     shell.add_command("msg", Box::new(SendMessageCommand {}));
     shell.run();
 }

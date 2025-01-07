@@ -1,10 +1,10 @@
-//! A module providing a generic command interpreter/shell
+//! A generic, extensible command interpreter.
 
 use std::collections::HashMap;
 use std::io;
 use std::io::Write;
 
-/// A command that can be executed in the shell
+/// A command that can be executed in the shell.
 pub trait ShellCommand {
     /// Execute the command. A return value of true will cause the shell to
     /// exit.
@@ -14,7 +14,7 @@ pub trait ShellCommand {
     fn describe(&self) -> String;
 }
 
-/// A shell command that exits the shell
+/// A command that exits the shell.
 pub struct ExitCommand {
     /// A message that will be printed just before exiting the shell.
     exit_string: String,
@@ -29,20 +29,20 @@ impl ShellCommand for ExitCommand {
     }
 }
 
-/// An interactive command interpreter.
+/// A command interpreter.
 pub struct Shell {
     greeting: String,
     commands: HashMap<String, Box<dyn ShellCommand>>,
 }
 impl Shell {
     /// Generate a new shell with barebones commands.
-    pub fn new(greeting: String, closing: String) -> Self {
+    pub fn new(greeting: &str, closing: &str) -> Self {
         let mut shell = Shell {
-            greeting,
+            greeting: String::from(greeting),
             commands: HashMap::new(),
         };
         let exit_command = ExitCommand {
-            exit_string: closing,
+            exit_string: String::from(closing),
         };
         shell.add_command("exit", Box::new(exit_command));
 
@@ -54,7 +54,7 @@ impl Shell {
         self.commands.insert(String::from(name), command);
     }
 
-    /// Execute the shell. Will continue to accept user input until 'exit' or
+    /// Execute the shell. Will continue to accept user input until `exit` or
     /// ctrl+D is submitted.
     pub fn run(&self) {
         println!("{}", self.greeting);
@@ -65,7 +65,7 @@ impl Shell {
 
             let mut input = String::new();
 
-            // Handle EOF
+            // Collect input and handle EOF
             if let Ok(0) = io::stdin().read_line(&mut input) {
                 println!("");
                 self.commands
