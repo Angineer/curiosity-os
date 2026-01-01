@@ -7,4 +7,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+crossterm = "0.29.0"
 itertools = "0.14.0"
+ratatui = "0.30.0"
+ratatui-widgets = "0.3.0"
