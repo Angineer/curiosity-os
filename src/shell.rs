@@ -3,31 +3,9 @@
 use std::collections::HashMap;
 use std::io;
 use std::io::Write;
+use itertools::Itertools;
 
-/// A command that can be executed in the shell.
-pub trait ShellCommand {
-    /// Execute the command. A return value of true will cause the shell to
-    /// exit.
-    fn execute(&self) -> bool;
-
-    /// Describe the command. Can be used to generate help text.
-    fn describe(&self) -> String;
-}
-
-/// A command that exits the shell.
-pub struct ExitCommand {
-    /// A message that will be printed just before exiting the shell.
-    exit_string: String,
-}
-impl ShellCommand for ExitCommand {
-    fn execute(&self) -> bool {
-        println!("{}", self.exit_string);
-        true
-    }
-    fn describe(&self) -> String {
-        String::from("Exit the command interpreter")
-    }
-}
+use crate::commands::{ShellCommand, ExitCommand};
 
 /// A command interpreter.
 pub struct Shell {
@@ -105,8 +83,8 @@ impl Shell {
 
         println!("Available commands:");
         println!("{:width$} Print this help text", String::from("help"));
-        for (name, command) in &self.commands {
-            println!("{:width$} {}", name, command.describe())
+        for name in self.commands.keys().sorted() {
+            println!("{:width$} {}", name, &self.commands[name].describe())
         }
     }
 }
